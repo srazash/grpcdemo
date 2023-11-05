@@ -1,0 +1,14 @@
+syntax = "proto3";
+option go_package = "grpcdemo/server/rpc";
+
+message Name {
+    string name = 1;
+}
+
+message Greeting {
+    string greeting = 1;
+}
+
+service Rpc {
+    rpc GetGreeting(Name) returns (Greeting);
+}
