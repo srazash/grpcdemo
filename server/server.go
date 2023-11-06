@@ -14,8 +14,8 @@ type myGreetingRpcServer struct {
 	greetingrpc.UnimplementedGreetingRpcServer
 }
 
-func (m myGreetingRpcServer) GetGreeting(c context.Context, n *greetingrpc.Name) (*greetingrpc.Greeting, error) {
-	return &greetingrpc.Greeting{Greeting: fmt.Sprintf("Hello, %s\n", n.String())}, nil
+func (s myGreetingRpcServer) GetGreeting(ctx context.Context, name *greetingrpc.Name) (*greetingrpc.Greeting, error) {
+	return &greetingrpc.Greeting{Greeting: fmt.Sprintf("Hello, %s\n", name.String())}, nil
 }
 
 func main() {
