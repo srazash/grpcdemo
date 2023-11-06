@@ -1,5 +1,5 @@
 syntax = "proto3";
-option go_package = "grpcdemo/server/rpc";
+option go_package = "rpc";
 
 message Name {
     string name = 1;
