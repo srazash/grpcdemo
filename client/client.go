@@ -2,19 +2,42 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"grpcdemo/greetingrpc"
+	"log"
+	"time"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
-type myGreetingRpcClient struct{}
+const (
+	defaultName = "world"
+)
 
-func (c *myGreetingRpcClient) GetGreeting(ctx context.Context, in *greetingrpc.Name, opts ...grpc.CallOption) (*greetingrpc.Greeting, error) {
-	return nil, nil // implement me pls :)
-}
+var (
+	addr = flag.String("addr", ":42069", "server adddress to connect to")
+	name = flag.String("name", defaultName, "name to greet")
+)
 
 func main() {
-	const name string = "Ryan"
-	fmt.Printf("%s lives!\n", name)
+	flag.Parse()
+
+	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("connection could not be established: %v\n", err)
+	}
+	defer conn.Close()
+
+	c := greetingrpc.NewGreetingRpcClient(conn)
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	r, err := c.GetGreeting(ctx, &greetingrpc.Name{Name: *name})
+	if err != nil {
+		log.Fatalf("could not call greeting method: %v\n", err)
+	}
+	fmt.Printf("%s", r.GetGreeting())
 }

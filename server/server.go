@@ -6,6 +6,7 @@ import (
 	"grpcdemo/greetingrpc"
 	"log"
 	"net"
+	"strings"
 
 	"google.golang.org/grpc"
 )
@@ -15,7 +16,8 @@ type myGreetingRpcServer struct {
 }
 
 func (s myGreetingRpcServer) GetGreeting(ctx context.Context, name *greetingrpc.Name) (*greetingrpc.Greeting, error) {
-	return &greetingrpc.Greeting{Greeting: fmt.Sprintf("Hello, %s\n", name.String())}, nil
+	str := strings.Split(name.String(), "\"")[1]
+	return &greetingrpc.Greeting{Greeting: fmt.Sprintf("Hello, %s!\n", str)}, nil
 }
 
 func main() {
